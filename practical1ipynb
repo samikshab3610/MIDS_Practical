@@ -1,0 +1,109 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyONn+HHikUiBaScu5NTAwq8",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/samikshab3610/MIDS_Practical/blob/main/practical1ipynb\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "DFAXRrkH5Jhb"
+      },
+      "outputs": [],
+      "source": [
+        "# Assignment 1: Titanic Dataset Preprocessing\n",
+        "\n",
+        "# Import libraries\n",
+        "import pandas as pd\n",
+        "import numpy as np\n",
+        "from sklearn.preprocessing import LabelEncoder, StandardScaler\n",
+        "\n",
+        "# Load dataset\n",
+        "# Download Titanic dataset CSV and place it in the same folder\n",
+        "df = pd.read_csv(\"Titanic.csv\")\n",
+        "\n",
+        "# Display first 5 rows\n",
+        "print(\"First 5 Rows of Dataset:\")\n",
+        "print(df.head())\n",
+        "\n",
+        "# Dataset information\n",
+        "print(\"\\nDataset Info:\")\n",
+        "print(df.info())\n",
+        "\n",
+        "# Check missing values\n",
+        "print(\"\\nMissing Values:\")\n",
+        "print(df.isnull().sum())\n",
+        "\n",
+        "# -----------------------------\n",
+        "# DATA PREPROCESSING\n",
+        "# -----------------------------\n",
+        "\n",
+        "# Fill missing Age values with mean\n",
+        "df['Age'].fillna(df['Age'].mean(), inplace=True)\n",
+        "\n",
+        "# Fill missing Embarked values with mode\n",
+        "df['Embarked'].fillna(df['Embarked'].mode()[0], inplace=True)\n",
+        "\n",
+        "# Drop Cabin column because too many missing values\n",
+        "df.drop('Cabin', axis=1, inplace=True)\n",
+        "\n",
+        "# Convert categorical columns into numeric\n",
+        "label_encoder = LabelEncoder()\n",
+        "\n",
+        "df['Sex'] = label_encoder.fit_transform(df['Sex'])\n",
+        "df['Embarked'] = label_encoder.fit_transform(df['Embarked'])\n",
+        "\n",
+        "# Drop unnecessary columns\n",
+        "df.drop(['Name', 'Ticket', 'PassengerId'], axis=1, inplace=True)\n",
+        "\n",
+        "# Display cleaned dataset\n",
+        "print(\"\\nPreprocessed Dataset:\")\n",
+        "print(df.head())\n",
+        "\n",
+        "# -----------------------------\n",
+        "# FEATURE SCALING\n",
+        "# -----------------------------\n",
+        "\n",
+        "scaler = StandardScaler()\n",
+        "\n",
+        "scaled_columns = ['Age', 'Fare']\n",
+        "df[scaled_columns] = scaler.fit_transform(df[scaled_columns])\n",
+        "\n",
+        "print(\"\\nDataset After Feature Scaling:\")\n",
+        "print(df.head())\n",
+        "\n",
+        "# Final dataset shape\n",
+        "print(\"\\nFinal Shape of Dataset:\")\n",
+        "print(df.shape)\n",
+        "\n",
+        "# Save preprocessed dataset\n",
+        "df.to_csv(\"Titanic_Preprocessed.csv\", index=False)\n",
+        "\n",
+        "print(\"\\nPreprocessed dataset saved successfully!\")"
+      ]
+    }
+  ]
+}
